@@ -1,0 +1,33 @@
+package spark_sql
+
+import common.ConnectionUtil
+import org.apache.spark.sql.SaveMode
+
+object LoadingData extends App {
+  val spark = ConnectionUtil.spark
+  import spark.implicits._
+  val sc = ConnectionUtil.sc
+  spark.sparkContext.setLogLevel("ERROR")
+  
+  ////////////// Default data source is Parquet ///////////////////////
+  val emp = spark.read.load("data-files//people.parquet")
+  emp.select($"name",$"age").show()
+  //emp.write.save("data-files//people.parquet")
+  
+  
+  ////////////// Manually specifying the data source //////////////////
+  /**
+   * Data sources are specified by their fully qualified name (i.e., org.apache.spark.sql.parquet), 
+   * For built-in sources you can also use their short names (json, parquet, jdbc, orc, libsvm, csv, text).s
+   */
+  val emp1 = spark.read.format("json").load("data-files//people.json")
+  emp1.select($"name").write.format("parquet").mode("overwrite").save("data-files//people_names.parquet")
+  spark.read.format("parquet").load("data-files//people_names.parquet").show()
+  
+  ///////////////// Query the file directly with SQL. ///////////////////// NOT Working.
+  //spark.sql("select * FROM parquet.'CCA-175/data-files/people_names.parquet'").show()
+  
+  
+  //////////////// Saving to Persistent Tables ///////////////////////////////////
+  
+}
