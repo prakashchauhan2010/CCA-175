@@ -9,9 +9,12 @@ object LoadingData extends App {
   val sc = ConnectionUtil.sc
   spark.sparkContext.setLogLevel("ERROR")
   
+  val jsonRDD = sc.makeRDD(Array("{'name':'Yin','address':{'city':'Columbus','state':'Ohio'}}"))
+  //spark.read.json(jsonRDD).show()
+  
   ////////////// Default data source is Parquet ///////////////////////
   val emp = spark.read.load("data-files//people.parquet")
-  emp.select($"name",$"age").show()
+  //emp.select($"name",$"age").show()
   //emp.write.save("data-files//people.parquet")
   
   
@@ -22,12 +25,23 @@ object LoadingData extends App {
    */
   val emp1 = spark.read.format("json").load("data-files//people.json")
   emp1.select($"name").write.format("parquet").mode("overwrite").save("data-files//people_names.parquet")
-  spark.read.format("parquet").load("data-files//people_names.parquet").show()
+  //spark.read.format("parquet").load("data-files//people_names.parquet").show()
   
   ///////////////// Query the file directly with SQL. ///////////////////// NOT Working.
   //spark.sql("select * FROM parquet.'CCA-175/data-files/people_names.parquet'").show()
   
   
   //////////////// Saving to Persistent Tables ///////////////////////////////////
+  val emp2 = spark.read.format("json").load("data-files//people.json")
+  //spark.sql("create database pdb")
+  //emp2.select($"name").write.format("parquet").mode("overwrite").saveAsTable("pdb.peopleinfo")
+  spark.sql("show databases").show()
+  spark.sql("use pdb").show()
+  //spark.sql("select * from peopleinfo").show()
+  spark.table("peopleinfo").show()
+  
+  
+  
+  
   
 }
