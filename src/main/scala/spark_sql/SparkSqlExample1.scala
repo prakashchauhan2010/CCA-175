@@ -14,7 +14,7 @@ object SparkSqlExample1 extends App {
   spark.sparkContext.setLogLevel("ERROR")
 
   case class Person(name: String, age: Long)
-  /*val personDF = spark.read.json("data-files//people.json")
+/*  val personDF = spark.read.json("data-files//people.json")
   val personJsonDS = personDF.as[Person]
   personJsonDS.show()
   personJsonDS.groupBy($"age").count().show()
@@ -24,7 +24,7 @@ object SparkSqlExample1 extends App {
   val schema = StructType(Array(StructField("name", StringType, true), StructField("age", IntegerType, true)))
   val personCSVDf = spark.read.schema(schema).csv("data-files//people.txt")
   val personCSVDs = personCSVDf.as[Person]
-  personCSVDs.show()
+  //personCSVDs.show()
   personCSVDs.groupBy($"age").count().show()
   personCSVDs.filter($"age" < 25).show()
   personCSVDs.filter($"name".startsWith("J")).show()

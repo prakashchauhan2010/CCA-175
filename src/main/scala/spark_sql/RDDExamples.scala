@@ -12,7 +12,7 @@ object RDDExamples extends App {
     val words = line.split(",")
     (words(0), words(1))
   })
-  //  finalData.collectAsMap().foreach(println)
+  finalData.collectAsMap().foreach(println)
 
   val csv = sc.textFile("data-files/users.csv")
   val headerAndRows = csv.map(line => line.split(",").map(_.trim))
